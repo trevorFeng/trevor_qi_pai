@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @Slf4j
-public class Init implements ApplicationRunner {
+public class RoomInit implements ApplicationRunner {
 
 
     @Resource
@@ -47,7 +47,9 @@ public class Init implements ApplicationRunner {
         statusList.add(0);
         statusList.add(1);
         List<Room> rooms = roomMapper.findStatus(statusList);
+        System.out.println(rooms);
         if (rooms.isEmpty()) {
+            log.info("没有记载的房间");
             return;
         }
         List<Long> roomIds = rooms.stream().map(room -> room.getId()).collect(Collectors.toList());

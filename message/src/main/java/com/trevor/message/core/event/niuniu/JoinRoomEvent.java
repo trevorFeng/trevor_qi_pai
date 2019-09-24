@@ -35,11 +35,11 @@ public class JoinRoomEvent extends BaseEvent implements Event {
         Boolean isFriendManage = task.getIsFriendManage();
         //加入的玩家是否是房主的好友
         Boolean roomAuthFriendAllow = task.getRoomAuthFriendAllow();
-        List<Integer> special = data.getSpecial();
+        Set<Integer> special = data.getSpecial();
 
         User joinUser = task.getJoinUser();
         Integer realPlayersSize = data.getRealPlayers().size();
-        String roomType = data.getRoomType();
+        Integer roomType = data.getRoomType();
 
         //房间规则检查
         SocketResult soc = checkRoom(isFriendManage, special, roomAuthFriendAllow
@@ -90,8 +90,8 @@ public class JoinRoomEvent extends BaseEvent implements Event {
         welcome(data, task, soc);
     }
 
-    private SocketResult checkRoom(Boolean isFriendManage, List<Integer> special, Boolean roomAuthFriendAllow
-            , User joinUser, Integer realPlayersSize, String roomType) {
+    private SocketResult checkRoom(Boolean isFriendManage, Set<Integer> special, Boolean roomAuthFriendAllow
+            , User joinUser, Integer realPlayersSize, Integer roomType) {
         if (isFriendManage) {
             //配置仅限好友
             if (special.contains(SpecialEnum.JUST_FRIENDS.getCode())) {
@@ -118,12 +118,12 @@ public class JoinRoomEvent extends BaseEvent implements Event {
      *
      * @throws IOException
      */
-    private SocketResult dealCanSee(User user, List<Integer> special, Integer realPlayersSize, String roomType) {
+    private SocketResult dealCanSee(User user, Set<Integer> special, Integer realPlayersSize, Integer roomType) {
         SocketResult socketResult = new SocketResult();
         socketResult.setUserId(String.valueOf(user.getId()));
         socketResult.setName(user.getAppName());
         socketResult.setPictureUrl(user.getAppPictureUrl());
-        Boolean bo = realPlayersSize < RoomTypeEnum.getRoomNumByType(Integer.valueOf(roomType));
+        Boolean bo = realPlayersSize < RoomTypeEnum.getRoomNumByType(roomType);
         //允许观战
         if (special != null && special.contains(SpecialEnum.CAN_SEE.getCode())) {
             if (bo) {

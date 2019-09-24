@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @create: 2019-09-21 21:43
  **/
 
-@FeignClient("message")
+@FeignClient("service-message")
 public interface MessageFeign {
 
     @RequestMapping(value = "/api/message/create/room/{userId}" ,method = RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
