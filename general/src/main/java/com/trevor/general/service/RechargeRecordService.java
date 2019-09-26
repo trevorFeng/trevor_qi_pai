@@ -44,6 +44,9 @@ public class RechargeRecordService {
         rechargeRecordMapper.insertOne(rechargeRecord);
 
         Integer hasCardNum = personalCardMapper.findCardNumByUserId(userId);
+        if (hasCardNum == null) {
+            hasCardNum = 0;
+        }
         personalCardMapper.updatePersonalCardNum(userId ,hasCardNum + rechargeCard.getCardNum());
 
         return ResponseHelper.createInstanceWithOutData(MessageCodeEnum.HANDLER_SUCCESS);

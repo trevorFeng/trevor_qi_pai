@@ -9,9 +9,19 @@
 
     <packaging>pom</packaging>
 
+    <modules>
+        <module>common</module>
+        <module>message</module>
+        <module>auth</module>
+        <module>eureka</module>
+        <module>gateway</module>
+        <module>general</module>
+    </modules>
+
 
     <!--配置参数-->
     <properties>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -130,6 +140,17 @@
     </dependencyManagement>
 
 
+    <!--
+    一）在父模块1中将整个项目clean>compile>package>install 一遍。
+    二）在父模块中的pom中的build插件注释掉。
+    三）单独对common模块进行clean>compile>package>install
+    四）将父模块中的pom中的build插件放开。
+    五）重新单独对子模块2 进行编译，就不会报错了。
+
+    原因可能是被引用的模块如果采用springboot插件打包会将相关依赖包打进去，然后其他调用的模块也有相关的依赖包，会有冲突。
+
+    -->
+
     <build>
         <plugins>
             <plugin>
@@ -137,6 +158,16 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.1.6.RELEASE</version>
             </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<version>3.1</version>-->
+                <!--<configuration>-->
+                    <!--<source>${java.version}</source>-->
+                    <!--<target>${java.version}</target>-->
+                    <!--<encoding>${project.build.sourceEncoding}</encoding>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 

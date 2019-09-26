@@ -9,8 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication
-@ComponentScan(basePackages = {"com.trevor.common", "com.trevor.message"})
+@SpringBootApplication(scanBasePackages = {"com.trevor.message" ,"com.trevor.common"})
 @EnableEurekaClient
 @MapperScan("com.trevor.common.dao.mysql")
 @Configuration

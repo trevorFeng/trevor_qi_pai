@@ -18,6 +18,7 @@ import com.trevor.message.bo.Task;
 import com.trevor.message.core.event.BaseEvent;
 import com.trevor.message.core.event.Event;
 import com.trevor.message.socket.socketImpl.NiuniuSocket;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+@Service
 public class JoinRoomEvent extends BaseEvent implements Event {
 
     @Override
@@ -149,13 +151,17 @@ public class JoinRoomEvent extends BaseEvent implements Event {
      *
      * @return
      */
-    public List<Player> getRealRoomPlayerCount(Set<String> realUserIds, Set<String> guanZhongUserIds, Map<String, Integer> totalScoreMap) {
-        List<String> userStrs = redisService.getBatchValue(realUserIds);
-
-        List<User> users = Lists.newArrayList();
-        for (String userStr : userStrs) {
-            users.add(JsonUtil.parseJavaObject(userStr, User.class));
+    private List<Player> getRealRoomPlayerCount(Set<String> realUserIds, Set<String> guanZhongUserIds, Map<String, Integer> totalScoreMap) {
+        List<Long> userIds = Lists.newArrayList();
+        for (String s : realUserIds) {
+            userIds.add(Long.valueOf(s));
         }
+        List<User> users = userService.findUsersByIds(userIds);
+
+//        List<User> users = Lists.newArrayList();
+//        for (String userStr : userStrs) {
+//            users.add(JsonUtil.parseJavaObject(userStr, User.class));
+//        }
 
         List<Player> players = Lists.newArrayList();
         for (User user : users) {
@@ -181,7 +187,7 @@ public class JoinRoomEvent extends BaseEvent implements Event {
         String runingNum = data.getRuningNum();
         String userId = task.getPlayId();
         Set<String> readyPlayers = data.getReadyPlayMap().get(runingNum);
-        List<String> pokes_4 = data.getPokesMap().get(runingNum).get(userId).subList(0, 4);
+        //List<String> pokes_4 = data.getPokesMap().get(runingNum).get(userId).subList(0, 4);
         socketResult.setGameStatus(gameStatus);
         //设置准备的玩家
         if (Objects.equals(gameStatus, GameStatusEnum.READY.getCode()) ||
@@ -191,16 +197,19 @@ public class JoinRoomEvent extends BaseEvent implements Event {
         }
         //设置玩家先发的4张牌
         else if (Objects.equals(gameStatus, GameStatusEnum.FA_FOUR_PAI.getCode())) {
+            List<String> pokes_4 = data.getPokesMap().get(runingNum).get(userId).subList(0, 4);
             socketResult.setUserPokeList_4(pokes_4);
         }
         //设置抢庄的玩家
         else if (Objects.equals(gameStatus, GameStatusEnum.QIANG_ZHUANG_COUNT_DOWN_START.getCode()) ||
                 Objects.equals(gameStatus, GameStatusEnum.QIANG_ZHUANG_COUNT_DOWN_END.getCode())) {
+            List<String> pokes_4 = data.getPokesMap().get(runingNum).get(userId).subList(0, 4);
             socketResult.setUserPokeList_4(pokes_4);
             socketResult.setQiangZhuangMap(data.getQiangZhuangMap().get(runingNum));
         }
         //设置庄家
         else if (Objects.equals(gameStatus, GameStatusEnum.QIANG_ZHUANG_ZHUAN_QUAN.getCode())) {
+            List<String> pokes_4 = data.getPokesMap().get(runingNum).get(userId).subList(0, 4);
             socketResult.setUserPokeList_4(pokes_4);
             socketResult.setZhuangJiaUserId(data.getZhuangJiaMap().get(runingNum));
         }
@@ -208,6 +217,7 @@ public class JoinRoomEvent extends BaseEvent implements Event {
         else if (Objects.equals(gameStatus, GameStatusEnum.XIA_ZHU_COUNT_DOWN_START.getCode()) ||
                 Objects.equals(gameStatus, GameStatusEnum.XIA_ZHU_COUNT_DOWN_END.getCode()) ||
                 Objects.equals(gameStatus, GameStatusEnum.DEFAULT_XIA_ZHU.getCode())) {
+            List<String> pokes_4 = data.getPokesMap().get(runingNum).get(userId).subList(0, 4);
             socketResult.setUserPokeList_4(pokes_4);
             socketResult.setZhuangJiaUserId(data.getZhuangJiaMap().get(runingNum));
             socketResult.setXianJiaXiaZhuMap(data.getXiaZhuMap().get(runingNum));

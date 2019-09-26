@@ -15,7 +15,7 @@ public class CreateRoomController {
     private CreateRoomService createRoomService;
 
     @RequestMapping(value = "/api/message/create/room/{userId}", method = {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public JsonEntity<Long> createRoom(@PathVariable("userId") String userId, @RequestBody NiuniuRoomParam niuniuRoomParam) {
-        return createRoomService.createRoom(niuniuRoomParam, userId);
+    public JsonEntity<Long> createRoom(@PathVariable("userId") Long userId, @RequestBody NiuniuRoomParam niuniuRoomParam) {
+        return createRoomService.createRoom(niuniuRoomParam, userId.toString());
     }
 }

@@ -16,7 +16,9 @@ import com.trevor.common.enums.MessageCodeEnum;
 import com.trevor.common.service.RedisService;
 import com.trevor.message.bo.NiuniuData;
 import com.trevor.message.core.GameCore;
+import com.trevor.message.core.TaskQueue;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -27,6 +29,9 @@ public class CreateRoomService {
 
     @Resource
     private GameCore gameCore;
+
+    @Resource
+    private TaskQueue taskQueue;
 
     @Resource
     private RedisService redisService;
@@ -43,6 +48,7 @@ public class CreateRoomService {
     @Resource
     private PersonalCardMapper personalCardMapper;
 
+    @Transactional(rollbackFor = Exception.class)
     public JsonEntity<Long> createRoom(NiuniuRoomParam niuniuRoomParam, String userId) {
         Long playerId = Long.valueOf(userId);
         //判断玩家拥有的房卡数量是否超过消耗的房卡数
@@ -89,6 +95,7 @@ public class CreateRoomService {
         data.setRuningNum("0");
         data.setGameStatus(GameStatusEnum.READY.getCode());
         gameCore.putRoomData(data ,room.getId().toString());
+        taskQueue.addQueue(room.getId().toString());
 
         //生成房卡消费记录
         CardConsumRecord cardConsumRecord = new CardConsumRecord();

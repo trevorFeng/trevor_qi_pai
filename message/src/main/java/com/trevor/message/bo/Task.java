@@ -59,6 +59,8 @@ public class Task {
 
     private User joinUser;
 
+
+
     /**
      * 用户离开的任务
      *

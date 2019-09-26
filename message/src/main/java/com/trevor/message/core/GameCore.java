@@ -4,6 +4,9 @@ import com.google.common.collect.Maps;
 import com.trevor.message.bo.RoomData;
 import com.trevor.message.bo.Task;
 import com.trevor.message.bo.TaskFlag;
+import com.trevor.message.core.event.niuniu.DisConnectionEvent;
+import com.trevor.message.core.event.niuniu.JoinRoomEvent;
+import com.trevor.message.core.event.niuniu.LeaveEvent;
 import com.trevor.message.core.event.niuniu.ReadyEvent;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +21,18 @@ public class GameCore {
      * 全部房间的游戏数据
      */
     private static Map<String, RoomData> map = Maps.newConcurrentMap();
+
     @Resource
-    private ReadyEvent ready;
+    private DisConnectionEvent disConnectionEvent;
+
+    @Resource
+    private LeaveEvent leaveEvent;
+
+    @Resource
+    private JoinRoomEvent joinRoomEvent;
+
+    @Resource
+    private ReadyEvent readyEvent;
 
 
     public void putRoomData(RoomData roomData, String roomId) {
@@ -46,10 +59,14 @@ public class GameCore {
     }
 
     public void executNiuniu(Task task, RoomData roomData) {
-        if (Objects.equals(task.getFlag(), TaskFlag.READY)) {
-            ready.execute(roomData, task);
-        } else if (Objects.equals(task.getFlag(), TaskFlag.COUNT_DOWN)) {
-
+        if (Objects.equals(task.getFlag(), TaskFlag.DIS_CONNECTION)) {
+            disConnectionEvent.execute(roomData ,task);
+        } else if (Objects.equals(task.getFlag(), TaskFlag.LEAVE)) {
+            leaveEvent.execute(roomData, task);
+        } else if (Objects.equals(task.getFlag(), TaskFlag.JOIN_ROOM)) {
+            joinRoomEvent.execute(roomData ,task);
+        } else if (Objects.equals(task.getFlag(), TaskFlag.READY)) {
+            readyEvent.execute(roomData ,task);
         }
     }
 }

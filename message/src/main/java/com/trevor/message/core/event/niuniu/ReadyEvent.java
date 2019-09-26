@@ -57,6 +57,7 @@ public class ReadyEvent extends BaseEvent implements Event {
                 socketService.broadcast(roomId, socketResult, players);
             }
         } else {
+            data.getReadyPlayMap().putIfAbsent(runingNum ,new HashSet<>());
             data.getReadyPlayMap().get(runingNum).add(userId);
             //广播准备的消息
             SocketResult soc = new SocketResult();

@@ -3,8 +3,11 @@ package com.trevor.message.core;
 import com.google.common.collect.Maps;
 import com.trevor.message.bo.Task;
 import com.trevor.message.core.thread.TaskThread;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
@@ -15,7 +18,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-@Service
+@Component
+@Order(2)
+@Slf4j
 public class TaskQueue implements ApplicationRunner {
 
     /**
@@ -82,9 +87,8 @@ public class TaskQueue implements ApplicationRunner {
      */
     public void addTask(String roomId, Task task) {
         ConcurrentLinkedQueue<Task> taskQueue = taskQueueMap.get(roomId);
-        if (taskQueue != null) {
-            taskQueue.offer(task);
-        }
+        taskQueue.offer(task);
+
     }
 
 
@@ -95,11 +99,14 @@ public class TaskQueue implements ApplicationRunner {
             while (iterator.hasNext()) {
                 ConcurrentLinkedQueue<Task> taskQueue = iterator.next();
                 Task poll = taskQueue.poll();
-                if (poll != null && executor1ToRoomIds.contains(poll.getRoomId())) {
-                    executor1.execute(new TaskThread(poll));
-                }
-                if (poll != null && executor2ToRoomIds.contains(poll.getRoomId())) {
-                    executor2.execute(new TaskThread(poll));
+                if (poll != null) {
+                    System.out.print(poll.toString());
+                    if (executor1ToRoomIds.contains(poll.getRoomId())) {
+                        executor1.execute(new TaskThread(poll));
+                    }
+                    if (executor2ToRoomIds.contains(poll.getRoomId())) {
+                        executor2.execute(new TaskThread(poll));
+                    }
                 }
             }
         }

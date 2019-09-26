@@ -7,9 +7,12 @@ import com.trevor.common.domain.mysql.Room;
 import com.trevor.common.enums.GameStatusEnum;
 import com.trevor.message.bo.NiuniuData;
 import com.trevor.message.core.GameCore;
+import com.trevor.message.core.TaskQueue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
  * @date 05/14/19 17:58
  */
 @Component
+@Order(1)
 @Slf4j
 public class RoomInit implements ApplicationRunner {
 
@@ -34,6 +38,9 @@ public class RoomInit implements ApplicationRunner {
     private NiuniuRoomParamMapper niuniuRoomParamMapper;
 
     @Resource
+    private TaskQueue taskQueue;
+
+    @Resource
     private GameCore gameCore;
 
     /**
@@ -42,14 +49,15 @@ public class RoomInit implements ApplicationRunner {
      * @param args
      */
     @Override
-    public void run(ApplicationArguments args) {
+    public void run(ApplicationArguments args) throws Exception{
+        System.out.println("这个是测试ApplicationRunner接口");
         List<Integer> statusList = new ArrayList<>();
         statusList.add(0);
         statusList.add(1);
         List<Room> rooms = roomMapper.findStatus(statusList);
         System.out.println(rooms);
         if (rooms.isEmpty()) {
-            log.info("没有记载的房间");
+            log.info("没有加载的房间");
             return;
         }
         List<Long> roomIds = rooms.stream().map(room -> room.getId()).collect(Collectors.toList());
@@ -75,6 +83,7 @@ public class RoomInit implements ApplicationRunner {
             data.setGameStatus(GameStatusEnum.READY.getCode());
 
             gameCore.putRoomData(data ,roomId);
+            taskQueue.addQueue(roomId);
         }
     }
 }

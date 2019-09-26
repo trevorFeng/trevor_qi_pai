@@ -6,9 +6,11 @@ import com.trevor.message.bo.RoomData;
 import com.trevor.message.bo.Task;
 import com.trevor.message.core.event.BaseEvent;
 import com.trevor.message.core.event.Event;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
+@Service
 public class DisConnectionEvent extends BaseEvent implements Event {
 
     @Override
