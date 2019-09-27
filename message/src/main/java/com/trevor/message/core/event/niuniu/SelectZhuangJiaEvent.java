@@ -11,12 +11,14 @@ import com.trevor.message.bo.Task;
 import com.trevor.message.core.event.BaseEvent;
 import com.trevor.message.core.event.Event;
 import com.trevor.message.core.schedule.CountDownImpl;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 /**
  * 发送庄家事件
  */
+@Service
 public class SelectZhuangJiaEvent extends BaseEvent implements Event {
 
 
@@ -26,6 +28,7 @@ public class SelectZhuangJiaEvent extends BaseEvent implements Event {
         String rungingNum = data.getRuningNum();
         String roomId = data.getRoomId();
         Set<String> players = data.getPlayers();
+        data.getQiangZhuangMap().putIfAbsent(rungingNum ,new HashMap<>());
         Map<String, Integer> qiangZhuangMap = data.getQiangZhuangMap().get(rungingNum);
 
         String zhuangJiaUserId;

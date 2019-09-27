@@ -5,18 +5,18 @@ import com.trevor.common.bo.SocketResult;
 import com.trevor.common.domain.mongo.PlayerResult;
 import com.trevor.common.domain.mysql.User;
 import com.trevor.common.enums.GameStatusEnum;
-import com.trevor.common.util.NumberUtil;
 import com.trevor.message.bo.NiuniuData;
 import com.trevor.message.bo.RoomData;
 import com.trevor.message.bo.Task;
 import com.trevor.message.core.event.BaseEvent;
 import com.trevor.message.core.event.Event;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class StopOrContinueEvent extends BaseEvent implements Event {
-
 
     @Override
     public void execute(RoomData roomData, Task task) {
@@ -34,8 +34,8 @@ public class StopOrContinueEvent extends BaseEvent implements Event {
         List<PlayerResult> playerResults = generatePlayerResults(roomId, data);
         playerResultMapper.saveAll(playerResults);
 
-        Integer runingNum = NumberUtil.stringFormatInteger(data.getRuningNum());
-        Integer totalNum = NumberUtil.stringFormatInteger(data.getTotalNum());
+        Integer runingNum = Integer.valueOf(data.getRuningNum());
+        Integer totalNum = Integer.valueOf(data.getTotalNum());
         Boolean isOver = Objects.equals(runingNum, totalNum);
 
         //结束

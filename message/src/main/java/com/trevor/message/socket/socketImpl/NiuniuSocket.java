@@ -6,7 +6,6 @@ import com.trevor.common.bo.WebKeys;
 import com.trevor.common.domain.mysql.Room;
 import com.trevor.common.domain.mysql.User;
 import com.trevor.common.util.JsonUtil;
-import com.trevor.common.util.NumberUtil;
 import com.trevor.common.util.ObjectUtil;
 import com.trevor.message.bo.Task;
 import com.trevor.message.socket.BaseServer;
@@ -22,6 +21,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Future;
 
 
 /**
@@ -83,7 +83,7 @@ public class NiuniuSocket extends BaseServer {
         //设置最大不活跃时间
         session.setMaxIdleTimeout(1000 * 60 * 45);
         this.roomId = roomId;
-        this.userId = NumberUtil.formatString(user.getId());
+        this.userId = user.getId().toString();
         this.session = session;
 
         //是否开通好友管理功能

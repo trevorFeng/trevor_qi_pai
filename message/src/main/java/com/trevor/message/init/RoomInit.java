@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,7 +56,6 @@ public class RoomInit implements ApplicationRunner {
         statusList.add(0);
         statusList.add(1);
         List<Room> rooms = roomMapper.findStatus(statusList);
-        System.out.println(rooms);
         if (rooms.isEmpty()) {
             log.info("没有加载的房间");
             return;
@@ -76,7 +76,7 @@ public class RoomInit implements ApplicationRunner {
             data.setRule(niuniuRoomParam.getRule());
             data.setXiazhu(niuniuRoomParam.getXiazhu());
             data.setSpecial(niuniuRoomParam.getSpecial());
-            data.setPaiXing(niuniuRoomParam.getPaiXing());
+            data.setPaiXing(niuniuRoomParam.getPaiXing() == null ? new HashSet<>() : niuniuRoomParam.getPaiXing());
             data.setTotalNum(totalNumMap.get(niuniuRoomParam.getRoomId()).toString());
             Integer runingNum = runingNumMap.get(niuniuRoomParam.getRoomId()) + 1;
             data.setRuningNum(runingNum.toString());

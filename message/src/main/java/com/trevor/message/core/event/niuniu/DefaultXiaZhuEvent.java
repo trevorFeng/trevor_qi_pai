@@ -8,15 +8,14 @@ import com.trevor.message.bo.RoomData;
 import com.trevor.message.bo.Task;
 import com.trevor.message.core.event.BaseEvent;
 import com.trevor.message.core.event.Event;
+import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 默认下注事件
  */
+@Service
 public class DefaultXiaZhuEvent extends BaseEvent implements Event {
 
 
@@ -28,6 +27,7 @@ public class DefaultXiaZhuEvent extends BaseEvent implements Event {
         Set<String> players = data.getPlayers();
         Set<String> readyPlayers = data.getReadyPlayMap().get(rungingNum);
         //已经下注的玩家
+        data.getXiaZhuMap().putIfAbsent(rungingNum ,new HashMap<>());
         Collection<Integer> xiaZhuPlayers = data.getXiaZhuMap().get(rungingNum).values();
         String zhuangJiaPlayerId = data.getZhuangJiaMap().get(rungingNum);
         Map<String, Integer> map = Maps.newHashMap();

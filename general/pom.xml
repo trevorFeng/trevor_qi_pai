@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.trevor</groupId>
             <artifactId>common</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- spring boot web 依赖 -->

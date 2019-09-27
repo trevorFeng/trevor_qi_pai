@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 
@@ -90,7 +91,7 @@ public class CreateRoomService {
         data.setRule(niuniuRoomParam.getRule());
         data.setXiazhu(niuniuRoomParam.getXiazhu());
         data.setSpecial(niuniuRoomParam.getSpecial());
-        data.setPaiXing(niuniuRoomParam.getPaiXing());
+        data.setPaiXing(niuniuRoomParam.getPaiXing() == null ? new HashSet<>() : niuniuRoomParam.getPaiXing());
         data.setTotalNum(totalNum.toString());
         data.setRuningNum("0");
         data.setGameStatus(GameStatusEnum.READY.getCode());

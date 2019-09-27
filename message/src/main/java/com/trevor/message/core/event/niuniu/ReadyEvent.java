@@ -2,7 +2,6 @@ package com.trevor.message.core.event.niuniu;
 
 import com.trevor.common.bo.SocketResult;
 import com.trevor.common.enums.GameStatusEnum;
-import com.trevor.common.util.NumberUtil;
 import com.trevor.message.bo.CountDownFlag;
 import com.trevor.message.bo.NiuniuData;
 import com.trevor.message.bo.RoomData;
@@ -40,14 +39,16 @@ public class ReadyEvent extends BaseEvent implements Event {
         //当前的房间状态
         String gameStatus = data.getGameStatus();
         //房间状态是不是准备状态
-        if (!Objects.equals(gameStatus, GameStatusEnum.READY.getCode())) {
+        if (!Objects.equals(gameStatus, GameStatusEnum.READY.getCode()) &&
+            !Objects.equals(gameStatus, GameStatusEnum.READY_COUNT_DOWN_START.getCode()) &&
+            !Objects.equals(gameStatus, GameStatusEnum.READY_COUNT_DOWN_END.getCode())) {
             //判断是否是最后一局，不是得话就准备下一局
             if (Objects.equals(runingNum, totalNum)) {
                 SocketResult socketResult = new SocketResult(-501);
                 socketService.sendToUserMessage(userId, socketResult, roomId);
                 return;
             } else {
-                String nextRuningNum = NumberUtil.stringFormatInteger(runingNum) + 1 + "";
+                String nextRuningNum = Integer.valueOf(runingNum) + 1 + "";
                 data.getReadyPlayMap().putIfAbsent(nextRuningNum, new HashSet<>());
                 data.getReadyPlayMap().get(runingNum).add(userId);
 

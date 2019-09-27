@@ -11,7 +11,6 @@ import com.trevor.common.enums.GameStatusEnum;
 import com.trevor.common.enums.RoomTypeEnum;
 import com.trevor.common.enums.SpecialEnum;
 import com.trevor.common.util.JsonUtil;
-import com.trevor.common.util.NumberUtil;
 import com.trevor.message.bo.NiuniuData;
 import com.trevor.message.bo.RoomData;
 import com.trevor.message.bo.Task;
@@ -70,8 +69,8 @@ public class JoinRoomEvent extends BaseEvent implements Event {
         data.getPlayers().add(playerId);
 
         //给新人发消息
-        Integer runingNum = NumberUtil.stringFormatInteger(data.getRuningNum());
-        Integer totalNum = NumberUtil.stringFormatInteger(data.getTotalNum());
+        Integer runingNum = Integer.valueOf(data.getRuningNum());
+        Integer totalNum = Integer.valueOf(data.getTotalNum());
         //设置房间正在运行的局数
         soc.setRuningAndTotal((runingNum + 1) + "/" + totalNum);
         //不是吃瓜群众则加入到真正的玩家集合中并且删除自己的掉线状态\
