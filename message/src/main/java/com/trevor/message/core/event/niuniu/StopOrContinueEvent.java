@@ -44,6 +44,7 @@ public class StopOrContinueEvent extends BaseEvent implements Event {
             SocketResult socketResult = new SocketResult(1013);
             socketResult.setGameStatus(GameStatusEnum.STOP.getCode());
             socketService.broadcast(roomId, socketResult, data.getPlayers());
+            socketService.stopRoom(players ,roomId);
         } else {
             Integer next = runingNum + 1;
 

@@ -93,7 +93,7 @@ public class CreateRoomService {
         data.setSpecial(niuniuRoomParam.getSpecial());
         data.setPaiXing(niuniuRoomParam.getPaiXing() == null ? new HashSet<>() : niuniuRoomParam.getPaiXing());
         data.setTotalNum(totalNum.toString());
-        data.setRuningNum("0");
+        data.setRuningNum("1");
         data.setGameStatus(GameStatusEnum.READY.getCode());
         gameCore.putRoomData(data ,room.getId().toString());
         taskQueue.addQueue(room.getId().toString());

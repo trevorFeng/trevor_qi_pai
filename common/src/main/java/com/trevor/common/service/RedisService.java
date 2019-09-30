@@ -42,7 +42,7 @@ public class RedisService {
      * 批量删除键值对
      * @param keys
      */
-    public void deletes(List<String> keys){
+    public void deletes(Set<String> keys){
         stringRedisTemplate.delete(keys);
     }
 

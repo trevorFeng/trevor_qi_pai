@@ -4,6 +4,7 @@ import com.trevor.common.bo.RedisConstant;
 import com.trevor.common.bo.SocketResult;
 import com.trevor.common.service.RedisService;
 import com.trevor.message.bo.Task;
+import com.trevor.message.core.GameCore;
 import com.trevor.message.core.TaskQueue;
 import com.trevor.message.socket.socketImpl.NiuniuSocket;
 import lombok.extern.slf4j.Slf4j;
@@ -33,12 +34,14 @@ public class SocketService {
     @Resource
     private TaskQueue taskQueue;
 
+    @Resource
+    private GameCore gameCore;
+
     @PreDestroy
     public void destory() {
         Iterator<NiuniuSocket> iterator = sockets.values().iterator();
         while (iterator.hasNext()) {
             NiuniuSocket socket = iterator.next();
-            socket.flush();
             socket.stop();
         }
     }
@@ -118,5 +121,24 @@ public class SocketService {
             s.close(s.session);
         }
         sockets.put(socket.userId, socket);
+    }
+
+
+    /**
+     * 停止房间
+     * @param players
+     * @param roomId
+     */
+    public void stopRoom(Set<String> players ,String roomId){
+        gameCore.removeRoomData(roomId);
+        log.info("停止房间：" + roomId);
+        for (String playerId : players) {
+            NiuniuSocket socket = sockets.get(playerId);
+            if (socket != null) {
+                socket.stop();
+            }
+            sockets.remove(playerId);
+        }
+        redisService.deletes(players);
     }
 }

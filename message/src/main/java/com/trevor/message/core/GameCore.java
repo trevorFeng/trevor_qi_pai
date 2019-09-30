@@ -14,14 +14,13 @@ import java.util.Objects;
 @Service
 public class GameCore {
 
+    @Resource
+    private NiuniuCore niuniuCore;
+
     /**
      * 全部房间的游戏数据
      */
     private static Map<String, RoomData> map = Maps.newConcurrentMap();
-
-    @Resource
-    private NiuniuCore niuniuCore;
-
 
     public void putRoomData(RoomData roomData, String roomId) {
         map.put(roomId, roomData);
@@ -31,18 +30,15 @@ public class GameCore {
         map.remove(roomId);
     }
 
-    public RoomData getRoomData(String roomId) {
-        return map.get(roomId);
-    }
-
-
     public void execut(Task task) {
-        RoomData roomData = getRoomData(task.getRoomId());
-        Integer roomType = roomData.getRoomType();
-        if (Objects.equals(roomType, 1)) {
-            niuniuCore.executNiuniu(task, roomData);
-        } else if (Objects.equals(roomType, 2)) {
+        RoomData roomData = map.get(task.getRoomId());
+        if (roomData != null) {
+            Integer roomType = roomData.getRoomType();
+            if (Objects.equals(roomType, 1)) {
+                niuniuCore.executNiuniu(task, roomData);
+            } else if (Objects.equals(roomType, 2)) {
 
+            }
         }
     }
 

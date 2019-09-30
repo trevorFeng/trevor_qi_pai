@@ -72,7 +72,7 @@ public class JoinRoomEvent extends BaseEvent implements Event {
         Integer runingNum = Integer.valueOf(data.getRuningNum());
         Integer totalNum = Integer.valueOf(data.getTotalNum());
         //设置房间正在运行的局数
-        soc.setRuningAndTotal((runingNum + 1) + "/" + totalNum);
+        soc.setRuningAndTotal(runingNum + "/" + totalNum);
         //不是吃瓜群众则加入到真正的玩家集合中并且删除自己的掉线状态\
         Set<String> disConnections = data.getDisConnections();
         if (!soc.getIsChiGuaPeople()) {

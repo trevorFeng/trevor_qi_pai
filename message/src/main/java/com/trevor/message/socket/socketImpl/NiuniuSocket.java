@@ -201,7 +201,9 @@ public class NiuniuSocket extends BaseServer {
     }
 
     public void stop() {
-        redisService.delete(RedisConstant.MESSAGES_QUEUE + userId);
+        flush();
+        //关闭连接
+        close(session);
     }
 
 
