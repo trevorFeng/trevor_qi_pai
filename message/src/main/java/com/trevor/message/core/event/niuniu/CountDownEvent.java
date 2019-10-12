@@ -22,7 +22,8 @@ public class CountDownEvent extends BaseEvent implements Event {
         String roomId = task.getRoomId();
         NiuniuData data = (NiuniuData) roomData;
 
-        SocketResult socketResult = new SocketResult(1002);
+        SocketResult socketResult = new SocketResult();
+        setHead(socketResult ,task.getNiuniuCountDownFg());
         //改变房间状态
         if (Objects.equals(task.getCountDown(), 5)) {
             changeGameStatus(data, task, socketResult, 5);
@@ -55,6 +56,18 @@ public class CountDownEvent extends BaseEvent implements Event {
                 Task qiangZhuangTask = Task.getStopOrContinue(roomId);
                 taskQueue.addTask(roomId, qiangZhuangTask);
             }
+        }
+    }
+
+    private void setHead(SocketResult socketResult ,String countDownFlag){
+        if (Objects.equals(countDownFlag, CountDownFlag.NIUNIU_READY)) {
+            socketResult.setHead(1002);
+        } else if (Objects.equals(countDownFlag, CountDownFlag.NIUNIU_QIANG_ZHUANG)) {
+            socketResult.setHead(1005);
+        } else if (Objects.equals(countDownFlag, CountDownFlag.XIA_ZHU)) {
+            socketResult.setHead(1007);
+        } else if (Objects.equals(countDownFlag, CountDownFlag.TAN_PAI)) {
+            socketResult.setHead(1009);
         }
     }
 
