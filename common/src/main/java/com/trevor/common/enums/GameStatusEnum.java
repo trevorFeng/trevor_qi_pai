@@ -22,7 +22,7 @@ public enum GameStatusEnum {
 
     DEFAULT_XIA_ZHU("10" ,"默认下注"),
 
-    FA_ONE_PAI("10" ,"发一张牌"),
+    FA_ONE_PAI("15" ,"发一张牌"),
 
     TAN_PAI_COUNT_DOWN_START("11" ,"摊牌倒计时开始"),
 

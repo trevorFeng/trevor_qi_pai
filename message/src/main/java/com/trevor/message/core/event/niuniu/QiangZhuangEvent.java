@@ -53,10 +53,14 @@ public class QiangZhuangEvent extends BaseEvent implements Event {
 
         //全部已经抢庄
         if (Objects.equals(readyPlayerSize, qiangZhuangSize)) {
+            System.out.print(readyPlayerSize);
+            System.out.print(qiangZhuangSize);
+            System.out.print("删除抢庄倒计时监听器");
             //删除抢庄倒计时监听器
             scheduleDispatch.removeCountDown(roomId);
             //添加选择庄家事件事件
             Task selectZhuangJia = Task.getNiuniuSelectZhuangJia(roomId);
+            System.out.print("添加选择庄家事件事件");
             taskQueue.addTask(roomId, selectZhuangJia);
         }
     }

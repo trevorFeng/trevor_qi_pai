@@ -8,6 +8,7 @@ import com.trevor.message.bo.RoomData;
 import com.trevor.message.bo.Task;
 import com.trevor.message.core.event.BaseEvent;
 import com.trevor.message.core.event.Event;
+import com.trevor.message.core.schedule.CountDownImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -55,6 +56,9 @@ public class CountDownEvent extends BaseEvent implements Event {
             } else if (Objects.equals(task.getNiuniuCountDownFg(), CountDownFlag.TAN_PAI)) {
                 Task qiangZhuangTask = Task.getStopOrContinue(roomId);
                 taskQueue.addTask(roomId, qiangZhuangTask);
+                //注册下注倒计时
+            }else if (Objects.equals(task.getNiuniuCountDownFg(), CountDownFlag.ZHUAN_QUAN)) {
+                scheduleDispatch.addCountDown(new CountDownImpl(roomId, 5, CountDownFlag.XIA_ZHU));
             }
         }
     }
@@ -68,6 +72,8 @@ public class CountDownEvent extends BaseEvent implements Event {
             socketResult.setHead(1007);
         } else if (Objects.equals(countDownFlag, CountDownFlag.TAN_PAI)) {
             socketResult.setHead(1009);
+        }else if (Objects.equals(countDownFlag, CountDownFlag.ZHUAN_QUAN)) {
+            socketResult.setHead(1021);
         }
     }
 

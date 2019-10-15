@@ -28,6 +28,10 @@ public class SelectZhuangJiaEvent extends BaseEvent implements Event {
         String rungingNum = data.getRuningNum();
         String roomId = data.getRoomId();
         Set<String> players = data.getPlayers();
+        //防止多次计算庄家
+        if (data.getZhuangJiaMap().get(rungingNum) != null) {
+            return;
+        }
         data.getQiangZhuangMap().putIfAbsent(rungingNum ,new HashMap<>());
         Map<String, Integer> qiangZhuangMap = data.getQiangZhuangMap().get(rungingNum);
 
@@ -80,7 +84,7 @@ public class SelectZhuangJiaEvent extends BaseEvent implements Event {
         socketService.broadcast(roomId, socketResult, players);
         //注册转圈倒计时
         if (!noZhuanQuan) {
-            scheduleDispatch.addCountDown(new CountDownImpl(roomId, 2, CountDownFlag.ZHUAN_QUAN));
+            scheduleDispatch.addCountDown(new CountDownImpl(roomId, 3, CountDownFlag.ZHUAN_QUAN));
         } else {
             //注册下注倒计时
             scheduleDispatch.addCountDown(new CountDownImpl(roomId, 5, CountDownFlag.XIA_ZHU));

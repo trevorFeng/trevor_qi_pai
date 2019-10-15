@@ -55,7 +55,6 @@ public class SocketService {
         Iterator<NiuniuSocket> iterator = sockets.values().iterator();
         while (iterator.hasNext()) {
             NiuniuSocket socket = iterator.next();
-            log.info("给玩家：" + socket.userId + "发消息");
             socket.flush();
         }
     }

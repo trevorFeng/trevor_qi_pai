@@ -43,6 +43,8 @@ public class StopOrContinueEvent extends BaseEvent implements Event {
             roomMapper.updateStatus(Long.valueOf(roomId), 2, runingNum);
             SocketResult socketResult = new SocketResult(1013);
             socketResult.setGameStatus(GameStatusEnum.STOP.getCode());
+            socketResult.setTanPaiPlayerUserIds(data.getTanPaiMap().get(runingNum));
+
             socketService.broadcast(roomId, socketResult, data.getPlayers());
             socketService.stopRoom(players ,roomId);
         } else {
@@ -55,6 +57,7 @@ public class StopOrContinueEvent extends BaseEvent implements Event {
 
             SocketResult socketResult = new SocketResult();
             socketResult.setHead(1016);
+            socketResult.setTanPaiPlayerUserIds(data.getTanPaiMap().get(runingNum));
             socketResult.setRuningAndTotal(next + "/" + totalNum);
             socketService.broadcast(roomId, socketResult, data.getPlayers());
         }
