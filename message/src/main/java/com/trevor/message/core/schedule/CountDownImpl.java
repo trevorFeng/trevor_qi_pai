@@ -1,5 +1,6 @@
 package com.trevor.message.core.schedule;
 
+import com.trevor.message.bo.CountDownNum;
 import com.trevor.message.bo.Task;
 import com.trevor.message.core.TaskQueue;
 import lombok.Data;
@@ -33,7 +34,7 @@ public class CountDownImpl implements CountDownListener {
     @Override
     public void onCountDown() {
         if (time > 0) {
-            Task task = Task.getNiuniuCountDown(time, roomId, countDownFlag);
+            Task task = Task.getNiuniuCountDown(time, roomId, countDownFlag , CountDownNum.TWENTY);
             taskQueue.addTask(roomId, task);
             time--;
         }

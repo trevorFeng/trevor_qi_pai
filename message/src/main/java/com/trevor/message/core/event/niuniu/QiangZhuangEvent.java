@@ -40,10 +40,12 @@ public class QiangZhuangEvent extends BaseEvent implements Event {
         }
 
         //放入data
-        Integer multiple = task.getQiangZhuangBeiShu() <= 0 ? 1 : task.getQiangZhuangBeiShu();
+        Integer multiple = task.getQiangZhuangBeiShu() <= 0 ? 0 : task.getQiangZhuangBeiShu();
         data.getQiangZhuangMap().putIfAbsent(runingNum, new HashMap<>());
         Map<String, Integer> qiangZhuangMap = data.getQiangZhuangMap().get(runingNum);
-        qiangZhuangMap.putIfAbsent(playerId, multiple);
+        if (!Objects.equals(multiple ,0)) {
+            qiangZhuangMap.putIfAbsent(playerId, multiple);
+        }
 
         //广播抢庄的消息
         socketService.broadcast(roomId, new SocketResult(1010, playerId, multiple), players);

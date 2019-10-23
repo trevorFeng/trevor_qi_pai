@@ -50,7 +50,7 @@ public class SocketService {
      * fixedRate设置的上一个任务的开始时间到下一个任务开始时间的间隔
      * fixedDelay是设定上一个任务结束后多久执行下一个任务，也就是fixedDelay只关心上一任务的结束时间和下一任务的开始时间
      */
-    @Scheduled(initialDelay = 1000 * 3, fixedDelay = 1000)
+    @Scheduled(initialDelay = 1000 * 3, fixedDelay = 300)
     public void checkRoom() {
         Iterator<NiuniuSocket> iterator = sockets.values().iterator();
         while (iterator.hasNext()) {

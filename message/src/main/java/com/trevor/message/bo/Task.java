@@ -138,13 +138,13 @@ public class Task {
      * @param roomId
      * @return
      */
-    public static Task getNiuniuCountDown(Integer time, String roomId, String niuniuCountDownFg) {
+    public static Task getNiuniuCountDown(Integer time, String roomId, String niuniuCountDownFg ,Integer totalCountDown) {
         Task task = new Task();
         task.roomId = roomId;
         task.countDown = time;
         task.flag = TaskFlag.COUNT_DOWN;
         task.niuniuCountDownFg = niuniuCountDownFg;
-        task.totalCountDown = time;
+        task.totalCountDown = totalCountDown;
         return task;
     }
 
