@@ -196,18 +196,21 @@ public class JoinRoomEvent extends BaseEvent implements Event {
         }
         //设置玩家先发的4张牌
         else if (Objects.equals(gameStatus, GameStatusEnum.FA_FOUR_PAI.getCode())) {
+            socketResult.setReadyPlayerIds(readyPlayers);
             List<String> pokes_4 = data.getPokesMap().get(runingNum).get(userId).subList(0, 4);
             socketResult.setUserPokeList_4(pokes_4);
         }
         //设置抢庄的玩家
         else if (Objects.equals(gameStatus, GameStatusEnum.QIANG_ZHUANG_COUNT_DOWN_START.getCode()) ||
                 Objects.equals(gameStatus, GameStatusEnum.QIANG_ZHUANG_COUNT_DOWN_END.getCode())) {
+            socketResult.setReadyPlayerIds(readyPlayers);
             List<String> pokes_4 = data.getPokesMap().get(runingNum).get(userId).subList(0, 4);
             socketResult.setUserPokeList_4(pokes_4);
             socketResult.setQiangZhuangMap(data.getQiangZhuangMap().get(runingNum));
         }
         //设置庄家
         else if (Objects.equals(gameStatus, GameStatusEnum.QIANG_ZHUANG_ZHUAN_QUAN.getCode())) {
+            socketResult.setReadyPlayerIds(readyPlayers);
             List<String> pokes_4 = data.getPokesMap().get(runingNum).get(userId).subList(0, 4);
             socketResult.setUserPokeList_4(pokes_4);
             socketResult.setZhuangJiaUserId(data.getZhuangJiaMap().get(runingNum));
@@ -216,6 +219,7 @@ public class JoinRoomEvent extends BaseEvent implements Event {
         else if (Objects.equals(gameStatus, GameStatusEnum.XIA_ZHU_COUNT_DOWN_START.getCode()) ||
                 Objects.equals(gameStatus, GameStatusEnum.XIA_ZHU_COUNT_DOWN_END.getCode()) ||
                 Objects.equals(gameStatus, GameStatusEnum.DEFAULT_XIA_ZHU.getCode())) {
+            socketResult.setReadyPlayerIds(readyPlayers);
             List<String> pokes_4 = data.getPokesMap().get(runingNum).get(userId).subList(0, 4);
             socketResult.setUserPokeList_4(pokes_4);
             socketResult.setZhuangJiaUserId(data.getZhuangJiaMap().get(runingNum));
@@ -223,11 +227,13 @@ public class JoinRoomEvent extends BaseEvent implements Event {
         }
         //设置最后一张牌
         else if (Objects.equals(gameStatus, GameStatusEnum.FA_ONE_PAI.getCode())) {
+            socketResult.setReadyPlayerIds(readyPlayers);
             setLastPoke(data, runingNum, socketResult);
         }
         //设置摊牌的玩家
         else if (Objects.equals(gameStatus, GameStatusEnum.TAN_PAI_COUNT_DOWN_START.getCode()) ||
                 Objects.equals(gameStatus, GameStatusEnum.TAN_PAI_COUNT_DOWN_END.getCode())) {
+            socketResult.setReadyPlayerIds(readyPlayers);
             setLastPoke(data, runingNum, socketResult);
             socketResult.setTanPaiPlayerUserIds(data.getTanPaiMap().get(runingNum));
         }

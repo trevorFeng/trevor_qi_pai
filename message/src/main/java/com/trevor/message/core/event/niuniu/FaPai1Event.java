@@ -6,10 +6,7 @@ import com.trevor.common.bo.SocketResult;
 import com.trevor.common.enums.GameStatusEnum;
 import com.trevor.common.enums.NiuNiuPaiXingEnum;
 import com.trevor.common.util.PokeUtil;
-import com.trevor.message.bo.CountDownFlag;
-import com.trevor.message.bo.NiuniuData;
-import com.trevor.message.bo.RoomData;
-import com.trevor.message.bo.Task;
+import com.trevor.message.bo.*;
 import com.trevor.message.core.event.BaseEvent;
 import com.trevor.message.core.event.Event;
 import com.trevor.message.core.schedule.CountDownImpl;
@@ -53,13 +50,13 @@ public class FaPai1Event extends BaseEvent implements Event {
 
         socketService.broadcast(roomId, socketResult, data.getPlayers());
         //注册摊牌倒计时事件
-        scheduleDispatch.addCountDown(new CountDownImpl(roomId, 5, CountDownFlag.TAN_PAI));
+        scheduleDispatch.addCountDown(new CountDownImpl(roomId, CountDownNum.TWENTY, CountDownFlag.TAN_PAI));
     }
 
     private void calcScore(NiuniuData data, String runingNum) {
         Set<Integer> paiXing = data.getPaiXing();
         Integer rule = data.getRule();
-        Integer BasePoint = data.getBasePoint();
+        Integer basePoint = data.getBasePoint();
         //庄家id
         String zhuangJiaUserId = data.getZhuangJiaMap().get(runingNum);
         //抢庄的map
@@ -73,7 +70,7 @@ public class FaPai1Event extends BaseEvent implements Event {
         //庄家的牌型
         PaiXing zhuangJiaPaiXing = PokeUtil.isNiuNiu(zhuangJiaPokes, paiXing, rule);
         Integer zhuangJiaScore = 0;
-        //初始化
+        //初始化本局得分
         data.getRuningScoreMap().putIfAbsent(runingNum, new HashMap<>());
         Map<String, Integer> scoreMap = data.getRuningScoreMap().get(runingNum);
 
@@ -94,7 +91,7 @@ public class FaPai1Event extends BaseEvent implements Event {
                 //玩家的下注倍数
                 Integer xianJiaQiangZhu = xianJiaXiaZhuMap.get(xianJiaUserId) == null ? 1 : xianJiaXiaZhuMap.get(xianJiaUserId);
                 //基本分数
-                Integer score = zhuangJiaQiangZhuang * xianJiaQiangZhu * BasePoint;
+                Integer score = zhuangJiaQiangZhuang * xianJiaQiangZhu * basePoint;
                 //闲家的总分
                 Integer xianJiaTotalScore = totalScoreMap.get(xianJiaUserId) == null ? 0 : totalScoreMap.get(xianJiaUserId);
                 //庄家大于闲家

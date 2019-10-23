@@ -2,10 +2,7 @@ package com.trevor.message.core.event.niuniu;
 
 import com.trevor.common.bo.SocketResult;
 import com.trevor.common.enums.GameStatusEnum;
-import com.trevor.message.bo.CountDownFlag;
-import com.trevor.message.bo.NiuniuData;
-import com.trevor.message.bo.RoomData;
-import com.trevor.message.bo.Task;
+import com.trevor.message.bo.*;
 import com.trevor.message.core.event.BaseEvent;
 import com.trevor.message.core.event.Event;
 import com.trevor.message.core.schedule.CountDownImpl;
@@ -72,7 +69,7 @@ public class ReadyEvent extends BaseEvent implements Event {
 
             if (readyPlayerSize == 2 && realPlayerSize > 2) {
                 //注册准备倒计时监听器
-                scheduleDispatch.addCountDown(new CountDownImpl(roomId, 5, CountDownFlag.NIUNIU_READY));
+                scheduleDispatch.addCountDown(new CountDownImpl(roomId, CountDownNum.TWENTY, CountDownFlag.NIUNIU_READY));
             } else if (Objects.equals(readyPlayerSize, realPlayerSize) && readyPlayerSize >= 2) {
                 //移除监听器
                 scheduleDispatch.removeCountDown(roomId);

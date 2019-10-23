@@ -36,6 +36,11 @@ public class Task {
     private Integer xiaZhuBeiShu;
 
     /**
+     * 总共的倒计时时间
+     */
+    private Integer totalCountDown;
+
+    /**
      * 牛牛倒计时的标志
      */
     private String niuniuCountDownFg;
@@ -139,6 +144,7 @@ public class Task {
         task.countDown = time;
         task.flag = TaskFlag.COUNT_DOWN;
         task.niuniuCountDownFg = niuniuCountDownFg;
+        task.totalCountDown = time;
         return task;
     }
 

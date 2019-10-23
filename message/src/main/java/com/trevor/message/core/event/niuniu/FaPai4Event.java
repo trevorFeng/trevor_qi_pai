@@ -7,10 +7,7 @@ import com.trevor.common.bo.SocketResult;
 import com.trevor.common.enums.GameStatusEnum;
 import com.trevor.common.util.PokeUtil;
 import com.trevor.common.util.RandomUtils;
-import com.trevor.message.bo.CountDownFlag;
-import com.trevor.message.bo.NiuniuData;
-import com.trevor.message.bo.RoomData;
-import com.trevor.message.bo.Task;
+import com.trevor.message.bo.*;
 import com.trevor.message.core.event.BaseEvent;
 import com.trevor.message.core.event.Event;
 import com.trevor.message.core.schedule.CountDownImpl;
@@ -46,7 +43,7 @@ public class FaPai4Event extends BaseEvent implements Event {
         Set<String> players = data.getPlayers();
         faPai(data.getPokesMap().get(runingNum), readyPlayerUserIds, players, roomId);
         //抢庄倒计时添加到任务队列
-        scheduleDispatch.addCountDown(new CountDownImpl(data.getRoomId(), 5, CountDownFlag.NIUNIU_QIANG_ZHUANG));
+        scheduleDispatch.addCountDown(new CountDownImpl(data.getRoomId(), CountDownNum.TWENTY, CountDownFlag.NIUNIU_QIANG_ZHUANG));
     }
 
     private void faPai(Map<String, List<String>> pokesMap, Set<String> readyPlayerUserIds, Set<String> players, String roomId) {

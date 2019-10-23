@@ -4,10 +4,7 @@ import com.google.common.collect.Lists;
 import com.trevor.common.bo.SocketResult;
 import com.trevor.common.enums.GameStatusEnum;
 import com.trevor.common.util.RandomUtils;
-import com.trevor.message.bo.CountDownFlag;
-import com.trevor.message.bo.NiuniuData;
-import com.trevor.message.bo.RoomData;
-import com.trevor.message.bo.Task;
+import com.trevor.message.bo.*;
 import com.trevor.message.core.event.BaseEvent;
 import com.trevor.message.core.event.Event;
 import com.trevor.message.core.schedule.CountDownImpl;
@@ -51,9 +48,9 @@ public class SelectZhuangJiaEvent extends BaseEvent implements Event {
                     beiShus.add(beiShu);
                 }
                 //升序排列
-                Collections.reverse(beiShus);
+                Collections.sort(beiShus);
                 List<String> maxBeiShuPlayerIds = Lists.newArrayList();
-                Integer maxBeiShu = beiShus.get(0);
+                Integer maxBeiShu = beiShus.get(beiShus.size()-1);
                 for (Map.Entry<String, Integer> entry : qiangZhuangMap.entrySet()) {
                     if (Objects.equals(entry.getValue(), maxBeiShu)) {
                         maxBeiShuPlayerIds.add(entry.getKey());
@@ -84,10 +81,10 @@ public class SelectZhuangJiaEvent extends BaseEvent implements Event {
         socketService.broadcast(roomId, socketResult, players);
         //注册转圈倒计时
         if (!noZhuanQuan) {
-            scheduleDispatch.addCountDown(new CountDownImpl(roomId, 3, CountDownFlag.ZHUAN_QUAN));
+            scheduleDispatch.addCountDown(new CountDownImpl(roomId, CountDownNum.THREE, CountDownFlag.ZHUAN_QUAN));
         } else {
             //注册下注倒计时
-            scheduleDispatch.addCountDown(new CountDownImpl(roomId, 5, CountDownFlag.XIA_ZHU));
+            scheduleDispatch.addCountDown(new CountDownImpl(roomId, CountDownNum.TWENTY, CountDownFlag.XIA_ZHU));
         }
     }
 
