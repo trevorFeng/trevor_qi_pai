@@ -1,7 +1,6 @@
 package com.trevor.message.service;
 
 import com.trevor.common.bo.JsonEntity;
-import com.trevor.common.bo.RedisConstant;
 import com.trevor.common.bo.ResponseHelper;
 import com.trevor.common.dao.mongo.NiuniuRoomParamMapper;
 import com.trevor.common.dao.mysql.CardConsumRecordMapper;
@@ -13,7 +12,6 @@ import com.trevor.common.domain.mysql.Room;
 import com.trevor.common.enums.ConsumCardEnum;
 import com.trevor.common.enums.GameStatusEnum;
 import com.trevor.common.enums.MessageCodeEnum;
-import com.trevor.common.service.RedisService;
 import com.trevor.message.bo.NiuniuData;
 import com.trevor.message.core.GameCore;
 import com.trevor.message.core.TaskQueue;
@@ -22,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -33,9 +30,6 @@ public class CreateRoomService {
 
     @Resource
     private TaskQueue taskQueue;
-
-    @Resource
-    private RedisService redisService;
 
     @Resource
     private RoomMapper roomMapper;

@@ -1,6 +1,7 @@
 package com.trevor.message.core.event.niuniu;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.trevor.common.bo.SocketResult;
 import com.trevor.common.enums.GameStatusEnum;
 import com.trevor.common.util.RandomUtils;
@@ -29,29 +30,37 @@ public class SelectZhuangJiaEvent extends BaseEvent implements Event {
         if (data.getZhuangJiaMap().get(rungingNum) != null) {
             return;
         }
+        Set<String> readyPlayers = data.getReadyPlayMap().get(rungingNum);
         data.getQiangZhuangMap().putIfAbsent(rungingNum ,new HashMap<>());
         Map<String, Integer> qiangZhuangMap = data.getQiangZhuangMap().get(rungingNum);
-
+        Map<String, Integer> realQiangZhuangMap = Maps.newHashMap();
+        //删除不抢庄的
+        for (Map.Entry<String ,Integer> entry : qiangZhuangMap.entrySet()) {
+            if (entry.getValue() > 0) {
+                realQiangZhuangMap.put(entry.getKey() ,entry.getValue());
+            }
+        }
         String zhuangJiaUserId;
         List<String> qiangZhuangZhuanQuanList = Lists.newArrayList();
         //没人抢庄
-        if (qiangZhuangMap.isEmpty()) {
-            zhuangJiaUserId = noPeopleQiangZhuang(data.getReadyPlayMap().get(rungingNum));
+        if (realQiangZhuangMap.isEmpty()) {
+            zhuangJiaUserId = noPeopleQiangZhuang(readyPlayers);
+            qiangZhuangZhuanQuanList.addAll(readyPlayers);
         } else {
             //一个人抢庄
-            if (qiangZhuangMap.size() == 1) {
-                zhuangJiaUserId = onePeopleQiangZhuang(qiangZhuangMap);
+            if (realQiangZhuangMap.size() == 1) {
+                zhuangJiaUserId = onePeopleQiangZhuang(realQiangZhuangMap);
                 //多人抢庄
             } else {
                 List<Integer> beiShus = Lists.newArrayList();
-                for (Integer beiShu : qiangZhuangMap.values()) {
+                for (Integer beiShu : realQiangZhuangMap.values()) {
                     beiShus.add(beiShu);
                 }
                 //升序排列
                 Collections.sort(beiShus);
                 List<String> maxBeiShuPlayerIds = Lists.newArrayList();
                 Integer maxBeiShu = beiShus.get(beiShus.size()-1);
-                for (Map.Entry<String, Integer> entry : qiangZhuangMap.entrySet()) {
+                for (Map.Entry<String, Integer> entry : realQiangZhuangMap.entrySet()) {
                     if (Objects.equals(entry.getValue(), maxBeiShu)) {
                         maxBeiShuPlayerIds.add(entry.getKey());
                     }

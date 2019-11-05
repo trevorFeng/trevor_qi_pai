@@ -73,7 +73,6 @@ public class NiuniuSocket extends BaseServer {
             return;
         }
         String token = session.getRequestParameterMap().get(WebKeys.TOKEN).get(0);
-        //Map<String, Object> claims = TokenUtil.getClaimsFromToken(token);
         User user = userService.getUserByToken(token);
         if (ObjectUtil.isEmpty(user)) {
             directSendMessage(new SocketResult(404), session);

@@ -1,4 +1,4 @@
-package com.trevor.message.init;
+package com.trevor.message.core.detection;
 
 import com.trevor.common.dao.mongo.NiuniuRoomParamMapper;
 import com.trevor.common.dao.mysql.RoomMapper;
@@ -11,7 +11,6 @@ import com.trevor.message.core.TaskQueue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -23,14 +22,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * @author trevor
- * @date 05/14/19 17:58
- */
+ * 一句话描述该类作用:【】
+ *
+ * @author: trevor
+ * @create: 2019-10-26 0:46
+ **/
 @Component
 @Order(1)
 @Slf4j
-public class RoomInit implements ApplicationRunner {
-
+public class InitRoom implements ApplicationRunner {
 
     @Resource
     private RoomMapper roomMapper;
@@ -86,4 +86,6 @@ public class RoomInit implements ApplicationRunner {
             taskQueue.addQueue(roomId);
         }
     }
+
+
 }

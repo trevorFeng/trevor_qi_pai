@@ -43,9 +43,8 @@ public class QiangZhuangEvent extends BaseEvent implements Event {
         Integer multiple = task.getQiangZhuangBeiShu() <= 0 ? 0 : task.getQiangZhuangBeiShu();
         data.getQiangZhuangMap().putIfAbsent(runingNum, new HashMap<>());
         Map<String, Integer> qiangZhuangMap = data.getQiangZhuangMap().get(runingNum);
-        if (!Objects.equals(multiple ,0)) {
-            qiangZhuangMap.putIfAbsent(playerId, multiple);
-        }
+        qiangZhuangMap.putIfAbsent(playerId, multiple);
+
 
         //广播抢庄的消息
         socketService.broadcast(roomId, new SocketResult(1010, playerId, multiple), players);
@@ -55,14 +54,10 @@ public class QiangZhuangEvent extends BaseEvent implements Event {
 
         //全部已经抢庄
         if (Objects.equals(readyPlayerSize, qiangZhuangSize)) {
-            System.out.print(readyPlayerSize);
-            System.out.print(qiangZhuangSize);
-            System.out.print("删除抢庄倒计时监听器");
             //删除抢庄倒计时监听器
             scheduleDispatch.removeCountDown(roomId);
-            //添加选择庄家事件事件
+            //添加选择庄家事件
             Task selectZhuangJia = Task.getNiuniuSelectZhuangJia(roomId);
-            System.out.print("添加选择庄家事件事件");
             taskQueue.addTask(roomId, selectZhuangJia);
         }
     }
