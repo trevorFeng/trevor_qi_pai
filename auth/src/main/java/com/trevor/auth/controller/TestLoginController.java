@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -41,6 +42,74 @@ public class TestLoginController {
 
     @Resource
     private PersonalCardMapper personalCardMapper;
+
+    @ApiOperation("根据名字得到tokenid")
+    @RequestMapping(value = "/api/denglu/login", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public JsonEntity<TestLogin> getTokenAndUserId(@RequestParam Integer name){
+        if (name < 100000 || name > 999999) {
+            return ResponseHelper.withErrorInstance(MessageCodeEnum.NAME_ERROR);
+        }
+        User byName = userService.findByName(name.toString());
+        if (byName == null) {
+            return ResponseHelper.withErrorInstance(MessageCodeEnum.NAME_EMPTY);
+        }
+        Map<String, Object> claims = Maps.newHashMap();
+        claims.put("openid" ,byName.getOpenid());
+        claims.put("hash" ,byName.getHash());
+        claims.put("timestamp" ,System.currentTimeMillis());
+        String token = TokenUtil.generateToken(claims);
+
+        TestLogin testLogin = new TestLogin();
+        testLogin.setToken(token);
+        testLogin.setUserId(byName.getId());
+
+        return ResponseHelper.createInstance(testLogin ,MessageCodeEnum.HANDLER_SUCCESS);
+    }
+
+
+
+
+    @ApiOperation("注册用户")
+    @RequestMapping(value = "/api/zhuCe/login", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public JsonEntity<Object> zhuCe(@RequestParam Integer name){
+        if (name < 100000 || name > 999999) {
+            return ResponseHelper.withErrorInstance(MessageCodeEnum.NAME_ERROR);
+        }
+        User byName = userService.findByName(name.toString());
+        if (byName != null) {
+            return ResponseHelper.withErrorInstance(MessageCodeEnum.NAME_REPEAT);
+        }
+
+        String openid = System.currentTimeMillis() + "";
+        String hash = RandomUtils.getRandomChars(20);
+
+        List<String> tupianList = Lists.newArrayList();
+        tupianList.add("http://hbimg.b0.upaiyun.com/fc4285d30a2d667304b9ef3c0d820b97a6e402933669d-QfsNiI_fw658");
+        tupianList.add("http://pic31.nipic.com/20130725/2929309_105611417128_2.jpg");
+        tupianList.add("http://img3.imgtn.bdimg.com/it/u=4098886459,2746584588&fm=26&gp=0.jpg");
+        tupianList.add("http://img3.imgtn.bdimg.com/it/u=809705136,1148759487&fm=26&gp=0.jpg");
+        tupianList.add("http://img5.imgtn.bdimg.com/it/u=3275347102,446490913&fm=26&gp=0.jpg");
+
+        User user = new User();
+        user.setOpenid(openid);
+        user.setHash(hash);
+        user.setAppName(name.toString());
+        user.setAppPictureUrl(tupianList.get(RandomUtils.getRandNumMax(tupianList.size())));
+
+
+        user.setType(1);
+        user.setFriendManageFlag(0);
+        userService.insertOne(user);
+        log.info("测试登录成功 ，hash值---------" + hash);
+
+        PersonalCard personalCard = new PersonalCard();
+        personalCard.setUserId(user.getId());
+        personalCard.setRoomCardNum(0);
+
+        personalCardMapper.insertOne(personalCard);
+
+        return ResponseHelper.createInstanceWithOutData(MessageCodeEnum.HANDLER_SUCCESS);
+    }
 
     @ApiOperation("只需点一下就可以登录了，转到/api/login/user获取用户信息")
     @RequestMapping(value = "/api/testLogin/login", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -84,4 +153,6 @@ public class TestLoginController {
         testLogin.setUserId(user.getId());
         return ResponseHelper.createInstance(testLogin , MessageCodeEnum.HANDLER_SUCCESS);
     }
+
+
 }

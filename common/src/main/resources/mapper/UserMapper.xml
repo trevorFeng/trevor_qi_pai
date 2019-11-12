@@ -108,4 +108,17 @@
         </foreach>
     </select>
 
+    <select id="findByName" resultType="com.trevor.common.domain.mysql.User">
+        SELECT
+        id id,
+        app_name appName,
+        open_id openid,
+        hash hash,
+        app_picture_url appPictureUrl
+        from
+        `user`
+        where
+        app_name = #{name}
+    </select>
+
 </mapper>

@@ -67,6 +67,12 @@ public enum MessageCodeEnum {
      */
     ERROR_NUM_MAX(-9 ,"临时凭证不存在或已过期"),
 
+    NAME_ERROR(-10 ,"名字需为6位数字"),
+
+    NAME_REPEAT(-11 ,"名字重复"),
+
+    NAME_EMPTY(-12 ,"名字不存在"),
+
 
     /**
      * 草，参数错误

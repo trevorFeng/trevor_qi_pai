@@ -70,4 +70,11 @@ public interface UserMapper {
      */
     List<User> findUsersByIds(@Param("ids") List<Long> ids);
 
+    /**
+     * 根据名字查找
+     * @param name
+     * @return
+     */
+    User findByName(@Param("name") String name);
+
 }
