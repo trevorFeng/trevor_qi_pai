@@ -3,9 +3,12 @@ package com.trevor.gateway.filter;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
+import com.trevor.common.bo.ResponseHelper;
 import com.trevor.common.bo.WebKeys;
 import com.trevor.common.domain.mysql.User;
+import com.trevor.common.enums.MessageCodeEnum;
 import com.trevor.common.service.UserService;
+import com.trevor.common.util.JsonUtil;
 import com.trevor.common.util.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -59,61 +62,43 @@ public class AccessFilter extends ZuulFilter {
     public boolean shouldFilter() {
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest request = requestContext.getRequest();
-
-        System.out.println("address:" + request.getRemoteAddr());
-        System.out.println("uri:" + request.getRequestURI());
-        System.out.println("url:" + request.getRequestURL());
-        // 这里可以结合ACL进行本地化或者放入到redis
-        if ("/apigateway/order/api/v1/order/saveforribbon".equalsIgnoreCase(request.getRequestURI())) {
+        String uri = request.getRequestURI();
+        if (uri.startsWith("/auth")) {
+            return false;
+        }else {
             return true;
         }
-        return true;
     }
 
     @Override
-    public Object run() throws ZuulException {
+    public Object run(){
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
-        HttpServletResponse response = ctx.getResponse();
         String token = request.getHeader(WebKeys.TOKEN);
         if (token == null) {
-            try {
-                log.info("zuul redirect:www.knave.top/wechat/");
-                response.sendRedirect(REDIRECT);
-            } catch (IOException e) {
-                e.printStackTrace();
-                log.error("zuul login error ------>" + e);
-            }
+            ctx.setSendZuulResponse(false);
+            ctx.setResponseStatusCode(401);
+            ctx.setResponseBody(JsonUtil.toJsonString(ResponseHelper.createInstanceWithOutData(MessageCodeEnum.TOKEN_ERROR)));
+            return null;
         }else {
             //解析token
             Map<String, Object> claims = TokenUtil.getClaimsFromToken(token);
             String openid = (String) claims.get("openid");
-            String hash = (String) claims.get("hash");
+            String userId = (String) claims.get("userid");
             Long timestamp = (Long) claims.get("timestamp");
 
             //三者必须存在,少一样说明token被篡改
-            if (openid == null || hash == null || timestamp == null) {
-                try {
-                    response.sendRedirect(REDIRECT);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    log.error("zuul login error ------>" + e);
-                }
-                return false;
+            if (openid == null || userId == null || timestamp == null) {
+                // 过滤该请求，不对其进行路由
+                ctx.setSendZuulResponse(false);
+                // 返回错误码
+                ctx.setResponseStatusCode(401);
+                // 返回错误内容
+                ctx.setResponseBody(JsonUtil.toJsonString(ResponseHelper.createInstanceWithOutData(MessageCodeEnum.TOKEN_ERROR)));
+                return null;
             }
-            //合法才通过
-            User user = userService.findUserByOpenid(openid);
-            if (user != null && Objects.equals(hash ,user.getHash())) {
-                return Boolean.TRUE;
-            }else {
-                try {
-                    response.sendRedirect(REDIRECT);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    log.error("zuul login error ------>" + e);
-                }
-            }
+            return true;
+
         }
-        return null;
     }
 }
